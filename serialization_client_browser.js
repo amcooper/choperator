@@ -4,6 +4,8 @@ var client = new WebSocket("ws://localhost:3000");
 
 // var bodyElement = document.querySelector("body");
 
+var userName = "Anonymous user";
+var userNameElement = document.getElementById("name_input");
 var inputElement = document.getElementById("input_box");
 var bodyElement = document.querySelector("body");
 var ulElement = document.createElement("ul");
@@ -18,8 +20,9 @@ var addItem = function(inputText) {
 };
 
 var hashPackage = function(input) {
+	if (userNameElement.value !== "") { userName = userNameElement.value; }
 	var hash = {
-		name : "Hildebrand",
+		name : userName,
 		text : input.toString().trim()
 	};
 	var hashJSON = JSON.stringify(hash);
