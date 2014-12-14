@@ -20,21 +20,27 @@ server.on("connection", function(ws) {
 
 	ws.on("message", function(input) {
 		//var y = clients.indexOf(ws);
+		var banhammer = false;
 		processedInput = JSON.parse(input);
 		for (j=0; j<bannedWords.length; j++) {
-			console.log(processedInput.text + "; " + bannedWords[j] + "; " + processedInput.text.indexOf(bannedWords[j]));
-			if (processedInput.text.indexOf(bannedWords[j]) > -1) {
+			if (processedInput.text.toLowerCase().indexOf(bannedWords[j]) > -1) {
 				// Ban the user
-				ws.send("Dropping the hammer on " + processedInput.name + " for using a banned word.");
-				ws.close();
+				console.log("Dropping the hammer on " + processedInput.name + " for using a banned word.");
+				ws.send("Dropping the hammer on " + processedInput.name + " for using a banned word."); // This notification doesn't work.
+				banhammer = true;
 			}
 		}
-		console.log(processedInput.name + " : " + processedInput.text);
-		for (i = 0; i < clients.length; i++) { clients[i].send(input); } // Should this be a forEach?
+		if (banhammer === true) { 
+			ws.close(); 
+		} else {
+			console.log(processedInput.name + " : " + processedInput.text);
+			for (i = 0; i < clients.length; i++) { clients[i].send(input); } // Should this be a forEach?
+		}
 	});
 
 	console.log("Clients connected: " + clients.length);
 
+	//This segment doesn't work.
 	clients.forEach(function(client) {
 		client.send("Client connected.");
 	});

@@ -20,10 +20,25 @@ var addItem = function(inputText) {
 };
 
 var hashPackage = function(input) {
+	var displayText = input.toString().trim();
+
 	if (userNameElement.value !== "") { userName = userNameElement.value; }
+
+	// Magic words
+	//if (displayText === "(table flip)") { displayText = "(╯°□°）╯︵ ┻━┻"; }
+	if (displayText.substr(0,5) === "/yell") {
+		if (displayText === "/yell") {
+			displayText = "AAARRGHH!";
+		} else {
+			displayText = displayText.substr(5).toUpperCase();
+		}
+	}
+
+	
+
 	var hash = {
 		name : userName,
-		text : input.toString().trim()
+		text : displayText
 	};
 	var hashJSON = JSON.stringify(hash);
 	return hashJSON;
