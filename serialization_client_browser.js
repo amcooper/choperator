@@ -34,7 +34,11 @@ var hashPackage = function(input) {
 		}
 	}
 
-	
+	if ((displayText.indexOf("http://") > -1) || (displayText.indexOf("https://") > -1)) {
+		//Convert URL to <a href="URL">URL</a>
+		var interText01 ;
+		urlText = ;
+	}
 
 	var hash = {
 		name : userName,
