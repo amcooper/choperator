@@ -37,13 +37,16 @@ var hashPackage = function(input) {
 	//Special parsings
 	if ((displayText.indexOf("http://") > -1) || (displayText.indexOf("https://") > -1)) {
 		//Convert URL to <a href="URL">URL</a>
-		var index01 = displayText.indexOf("http"); //13
-		var index02 = displayText.substr(index01).indexOf(" "); //25
+		var index01 = displayText.indexOf("http");
+		var index02 = displayText.substr(index01).indexOf(" ");
 		var urlString = displayText.substr(index01, index02);
-
-	//This is where images would be handled.
-
-		displayText = displayText.replace(urlString, "<a href=\"" + urlString + "\">" + urlString + "</a>");
+		//Image handling
+		var extension = urlString.substr(urlString.length - 4);
+		if ((extension === ".png") || (extension === ".bmp") || (extension === ".jpg")) {
+			displayText = displayText.replace(urlString, "<img width=\"200px\" src=\"" + urlString + "\">");
+		} else {
+			displayText = displayText.replace(urlString, "<a href=\"" + urlString + "\">" + urlString + "</a>");
+		}
 	}
 
 	var hash = {
