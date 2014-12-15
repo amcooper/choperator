@@ -7,16 +7,17 @@ var client = new WebSocket("ws://localhost:3000");
 var userName = "Anonymous user";
 var userNameElement = document.getElementById("name_input");
 var inputElement = document.getElementById("input_box");
-var bodyElement = document.querySelector("body");
+var chatElement = document.getElementById("chat");
 var ulElement = document.createElement("ul");
-bodyElement.appendChild(ulElement);
+chatElement.appendChild(ulElement);
 ulElement.style.listStyle = "none";
 
 var addItem = function(inputText) {
 	var newLiElement = document.createElement("li");
 	newLiElement.innerHTML = inputText;
-	var firstLiElement = ulElement.firstChild;
-	ulElement.insertBefore(newLiElement,firstLiElement);
+	ulElement.appendChild(newLiElement);
+	// var firstLiElement = ulElement.firstChild;
+	// ulElement.insertBefore(newLiElement,firstLiElement);
 };
 
 var hashPackage = function(input) {
@@ -35,14 +36,15 @@ var hashPackage = function(input) {
 	}
 
 	//Special parsings
+	displayText = displayText + " "; //This hack provides for detection of the end of the URL.
 	if ((displayText.indexOf("http://") > -1) || (displayText.indexOf("https://") > -1)) {
 		//Convert URL to <a href="URL">URL</a>
 		var index01 = displayText.indexOf("http");
-		var index02 = displayText.substr(index01).indexOf(" ");
-		var urlString = displayText.substr(index01, index02);
+		var substrLength = displayText.substr(index01).indexOf(" ");
+		var urlString = displayText.substr(index01, substrLength);
 		//Image handling
 		var extension = urlString.substr(urlString.length - 4);
-		if ((extension === ".png") || (extension === ".bmp") || (extension === ".jpg")) {
+		if ((extension === ".png") || (extension === ".bmp") || (extension === ".jpg") || (extension === ".gif")) {
 			displayText = displayText.replace(urlString, "<img width=\"200px\" src=\"" + urlString + "\">");
 		} else {
 			displayText = displayText.replace(urlString, "<a href=\"" + urlString + "\">" + urlString + "</a>");

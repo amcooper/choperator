@@ -1,19 +1,54 @@
 * {
 	font-family: "Liberation Sans", Avenir, Helvetica, sans-serif; 
-	-webkit-box-sizing: border-box;
+	/*-webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    box-sizing: border-box;
+    box-sizing: border-box;*/
 }
-#main {
+/*#main {
 	max-width: 600px;
 	margin: 50 auto;
-	color: darkBlue;
-	background: #ffaf4b; /* Old browsers */
-	background: -moz-linear-gradient(top,  #ffaf4b 0%, #ff920a 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffaf4b), color-stop(100%,#ff920a)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  #ffaf4b 0%,#ff920a 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  #ffaf4b 0%,#ff920a 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  #ffaf4b 0%,#ff920a 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  #ffaf4b 0%,#ff920a 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffaf4b', endColorstr='#ff920a',GradientType=0 ); /* IE6-9 */
+	/* background: #ffffee; /* Old browsers */
+	background-image: "./switchboard_bkgd.jpg";
+	/*background: -moz-linear-gradient(top,  #ffaf4b 0%, #ff920a 100%); /* FF3.6+ */
+	/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffaf4b), color-stop(100%,#ff920a)); /* Chrome,Safari4+ */
+	/*background: -webkit-linear-gradient(top,  #ffaf4b 0%,#ff920a 100%);  Chrome10+,Safari5.1+ 
+	/*background: -o-linear-gradient(top,  #ffaf4b 0%,#ff920a 100%); /* Opera 11.10+ */
+	/*background: -ms-linear-gradient(top,  #ffaf4b 0%,#ff920a 100%); /* IE10+ */
+	/*background: linear-gradient(to bottom,  #ffaf4b 0%,#ff920a 100%); /* W3C */
+	/*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffaf4b', endColorstr='#ff920a',GradientType=0 ); /* IE6-9 */
+/*}*/
+/*#footer {
+	padding: 10px;
+	border-color: black;
+	border: 5px;
+}*/
+html, body {
+    height: 100%;
+}
+body {
+	max-width: 600px;
+    margin: 50 auto;
+    padding: 0;
+    background-image: "./switchboard_bkgd.jpg";
+}
+#top {
+    position: absolute;
+}
+h1, p {
+    margin: 0;
+    padding: 0.3em 0;
+}
+#container {
+    min-height: 100%;
+    margin-bottom: -36px;
+}
+* html #container {
+    height: 100%;
+}
+#footer-spacer {
+    height: 36px;
+}
+#footer {
+    border-top: 1px solid #000;
+    height: 35px;
 }
