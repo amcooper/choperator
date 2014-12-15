@@ -1,5 +1,5 @@
 * {
-	font-family: "Liberation Sans", Avenir, Helvetica, sans-serif; 
+	font-family: "Bodoni 72 Oldstyle", Georgia, serif; 
 	/*-webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;*/
@@ -29,7 +29,7 @@ body {
 	max-width: 600px;
     margin: 50 auto;
     padding: 0;
-    background-image: "./switchboard_bkgd.jpg";
+    background-image: url("images/switchboard_bkgd.jpg");
 }
 #top {
     position: absolute;
@@ -39,8 +39,13 @@ h1, p {
     padding: 0.3em 0;
 }
 #container {
-    min-height: 100%;
+    max-height: 100%;
+    overflow: auto;
+    /*margin: 0px auto;*/
     margin-bottom: -36px;
+}
+#chat {
+	overflow: scroll;
 }
 * html #container {
     height: 100%;
@@ -51,4 +56,9 @@ h1, p {
 #footer {
     border-top: 1px solid #000;
     height: 35px;
+    position: fixed;
+    margin-bottom: 0px;
+}
+ul {
+	padding-left: 0pt;
 }

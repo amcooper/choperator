@@ -14,8 +14,9 @@ ulElement.style.listStyle = "none";
 
 var addItem = function(inputText) {
 	var newLiElement = document.createElement("li");
-	newLiElement.innerHTML = inputText;
+	newLiElement.innerHTML = inputText + "<br />";
 	ulElement.appendChild(newLiElement);
+	ulElement.scrollTop = ulElement.scrollHeight;
 	// var firstLiElement = ulElement.firstChild;
 	// ulElement.insertBefore(newLiElement,firstLiElement);
 };
