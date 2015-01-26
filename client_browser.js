@@ -1,5 +1,7 @@
 // client_browser.js
 
+// var WebSocket = require("ws");
+
 // The next two lines can have their commenting status toggled to cover local and server hosting.
 var client = new WebSocket("ws://localhost:3000");
 // var client = new WebSocket("ws://adam.princesspeach.nyc:3000");
