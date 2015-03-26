@@ -3,8 +3,8 @@
 // var WebSocket = require("ws");
 
 // The next two lines can have their commenting status toggled to cover local and server hosting.
-// var client = new WebSocket("ws://localhost:3000");
-var client = new WebSocket("ws://choperator.herokuapp.com:3000");
+// var client = new WebSocket("ws://localhost:3001");
+var client = new WebSocket("ws://adam.princesspeach.nyc:3001");
 
 var userName = "Anonymous user";
 var userNameElement = document.getElementById("name_input");

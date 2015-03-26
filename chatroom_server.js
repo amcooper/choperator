@@ -1,7 +1,7 @@
 //chatroom_server.js
 
 var WebSocketServer = require("ws").Server;
-var server = new WebSocketServer({port:3000});
+var server = new WebSocketServer({port:3001});
 
 var fs = require("fs");
 
@@ -10,7 +10,7 @@ var usernames = [];
 var all_messages = [];
 var bannedWords = ["moist", "pamphlet", "tummy", "yummy", "gummi", "gummy"];
 
-console.log("Listening on port 3000.");
+console.log("Listening on port 3001.");
 
 server.on("connection", function(ws) {
 
@@ -58,12 +58,13 @@ server.on("connection", function(ws) {
 
 	ws.on("message", function(input) {
 		var banhammer = false;
+		var banMessage;
 		processedInput = JSON.parse(input);
 		var x = clients.indexOf(ws);
 		usernames[x] = processedInput.name;
 		for (j=0; j<bannedWords.length; j++) {
 			if (processedInput.text.toLowerCase().indexOf(bannedWords[j]) > -1) {
-				var banMessage = "Dropping the hammer on " + processedInput.name + " for using a banned word.";
+				banMessage = "Dropping the hammer on " + processedInput.name + " for using a banned word.";
 				banhammer = true;
 			}
 		}
@@ -71,7 +72,7 @@ server.on("connection", function(ws) {
 		if (banhammer === true) { 
 			processedInput.name = "SERVER";
 			processedInput.text = banMessage; 
-		};
+		}
 		console.log(processedInput.name + " : " + processedInput.text);
 		var messageHash = {
 			name : processedInput.name,
@@ -82,7 +83,7 @@ server.on("connection", function(ws) {
 			client.send(JSON.stringify(messageHash));
 		});
 
-		if (banhammer === true) { ws.close() };
+		if (banhammer === true) { ws.close(); }
 
 		all_messages.push(messageHash);
 
