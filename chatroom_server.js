@@ -8,7 +8,7 @@ var fs = require("fs");
 var clients = [];
 var usernames = [];
 var all_messages = [];
-var bannedWords = ["moist", "pamphlet", "tummy", "yummy", "gummi", "gummy"];
+var bannedWords = ["moist", "pamphlet", "tummy", "yummy", "gummi", "gummy", "vainglorious"];
 
 console.log("Listening on port 3001.");
 
