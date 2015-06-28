@@ -1,7 +1,7 @@
-chat_app
+choperator
 ========
 
-Chat app | GA exercise
+Choperator | Websockets-based chat application
 
 A basic chat application with a growing list of features.
 
