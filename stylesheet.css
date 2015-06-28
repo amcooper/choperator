@@ -8,7 +8,7 @@
 	max-width: 600px;
 	margin: 50 auto;
 	/* background: #ffffee; /* Old browsers */
-	background-image: "./switchboard_bkgd.jpg";
+	/*background-image: "./switchboard_bkgd.jpg";*/
 	/*background: -moz-linear-gradient(top,  #ffaf4b 0%, #ff920a 100%); /* FF3.6+ */
 	/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffaf4b), color-stop(100%,#ff920a)); /* Chrome,Safari4+ */
 	/*background: -webkit-linear-gradient(top,  #ffaf4b 0%,#ff920a 100%);  Chrome10+,Safari5.1+ 
@@ -25,19 +25,28 @@
 html, body {
     height: 100%;
 }
+
 body {
 	max-width: 600px;
     margin: 50 auto;
     padding: 0;
     background-image: url("images/switchboard_bkgd.jpg");
 }
+
+header {
+	display: none;
+	font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
 #top {
     position: absolute;
 }
+
 h1, p {
     margin: 0;
     padding: 0.3em 0;
 }
+
 #container {
 	min-height: 100%;
     max-height: 100%;
@@ -45,21 +54,26 @@ h1, p {
     /*margin: 0px auto;*/
     margin-bottom: -36px;
 }
+
 #chat {
 	overflow: scroll;
 }
+
 * html #container {
     height: 100%;
 }
+
 #footer-spacer {
     height: 36px;
 }
+
 #footer {
     border-top: 1px solid #000;
     height: 35px;
     position: fixed;
     margin-bottom: 0px;
 }
+	
 ul {
 	padding-left: 0pt;
 }
