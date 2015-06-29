@@ -60,6 +60,7 @@ var hashPackage = function(input) {
 	return hashJSON;
 };
 
+// On Enter/Return keypress, send contents of input box to chat server
 var keyvalidate = function(event) {
 	if (event.keyCode === 13) { 
 		var packaged = hashPackage(inputElement.value);
@@ -68,8 +69,8 @@ var keyvalidate = function(event) {
 	}
 };
 
+// Event listener for chat client input
 client.addEventListener("open", function(event) {
-	// debugger;
 	addItem("Connected.");
 	client.addEventListener("message", function(event) {
 		var hash = JSON.parse(event.data);
@@ -77,4 +78,5 @@ client.addEventListener("open", function(event) {
 	});
 });
 
+// Event listener for Enter/Return in input box
 inputElement.addEventListener("keydown", keyvalidate);
