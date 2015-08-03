@@ -24,7 +24,7 @@ server.on("connection", function(ws) {
 	});
 
 	var newClientHash = {
-		name : "SERVER",
+		name : "Server",
 		text : "Client connected."
 	};
 
@@ -44,7 +44,7 @@ server.on("connection", function(ws) {
 		console.log("User " + usernames[x] + " has disconnected.");
 		console.log("Clients connected: " + clients.length);
 		var exitingClientHash = {
-			name : "SERVER",
+			name : "Server",
 			text : "User " + usernames[x] + " has disconnected."
 		};
 
@@ -77,7 +77,7 @@ server.on("connection", function(ws) {
 			}
 		}
 		if (banhammer === true) { 
-			processedInput.name = "SERVER";
+			processedInput.name = "Server";
 			processedInput.text = banMessage; 
 		}
 
