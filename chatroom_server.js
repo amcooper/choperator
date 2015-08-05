@@ -14,6 +14,28 @@ console.log("Listening on port 3001.");
 
 server.on("connection", function(ws) {
 
+	// Ill Chatbot
+	var ill_chatbot = function() {
+		var chatbot_name = "Ill Chatbot";
+		var utterance_array = [
+			"More than I imagined.", 
+			"Oops sorry; that wasn't meant for you",
+			"Say what?",
+			"Less of an issue.", 
+			"I think it was in June or July.", 
+			"Can't remember.", 
+			"Well you know what they say.", 
+			"I don't think I can reasonably be held responsible for that.", 
+			"Well bless your heart." 
+		];
+
+		index = Math.floor(Math.random() * utterance_array.length);
+
+		clients.forEach(function(client) {
+			client.send(JSON.stringify({name:chatbot_name, text:utterance_array[index]}));
+		});
+	};
+
 	clients.push(ws); // Add new client to clients array
 
 	console.log("Clients connected: " + clients.length);
@@ -93,12 +115,18 @@ server.on("connection", function(ws) {
 		});
 
 		// Close connection of banned user.
-		if (banhammer === true) { ws.close(); }
+		if (banhammer === true) { 
+			ws.close();
+		}
 
 		// Add message to all_messages array and text file
 		all_messages.push(messageHash);
 
 		fs.writeFileSync("chat_app_api.txt", JSON.stringify({ messages : all_messages }));
+
+		if (clients.length === 1) {
+			setTimeout(ill_chatbot, 1000);
+		}
 	});
 
 });
