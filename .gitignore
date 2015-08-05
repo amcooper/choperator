@@ -3,3 +3,4 @@ npm-debug.log
 .DS_Store
 /*.env
 nohup.out
+chat_app_api.*
