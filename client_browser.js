@@ -22,8 +22,6 @@ var addItem = function(inputText) {
 var hashPackage = function(input) {
 	var displayText = input.toString().trim();
 
-	if (userNameElement.value !== "") { userName = userNameElement.value; }
-
 	// Magic words
 	if (displayText === "(table flip)") { displayText = "(╯°□°）╯︵ ┻━┻"; }
 	if (displayText.substr(0,5) === "/yell") {
@@ -74,6 +72,11 @@ client.addEventListener("open", function(event) {
 		var hash = JSON.parse(event.data);
 		addItem(hash.name + ": " + hash.text);
 	});
+});
+
+// event listener for username
+name_input.addEventListener('blur', function() {
+	userName = this.value;
 });
 
 // Event listener for Enter/Return in input box
