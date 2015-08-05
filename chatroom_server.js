@@ -29,7 +29,7 @@ server.on("connection", function(ws) {
 			"Well bless your heart." 
 		];
 
-		index = Math.floor(Math.random() * utterance_array.length);
+		var index = Math.floor(Math.random() * utterance_array.length);
 
 		clients.forEach(function(client) {
 			client.send(JSON.stringify({name:chatbot_name, text:utterance_array[index]}));
