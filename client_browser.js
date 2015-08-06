@@ -19,51 +19,83 @@ var addItem = function(inputText) {
 	chatElement.scrollTop = chatElement.scrollHeight;
 };
 
-var hashPackage = function(input) {
-	var displayText = input.toString().trim();
+var tableFlip = function(matchData) {
+	console.log("function tableFlip : start"); //debug
+	return "(╯°□°）╯︵ ┻━┻";
+};
 
-	// Magic words
-	if (displayText === "(table flip)") { displayText = "(╯°□°）╯︵ ┻━┻"; }
-	if (displayText.substr(0,5) === "/yell") {
-		if (displayText === "/yell") {
-			displayText = "AAARRGHH!";
-		} else {
-			displayText = displayText.substr(5).toUpperCase();
+var yell = function(matchData) {
+	console.log("function yell : start"); //debug
+	var yellText = matchData[1] ? matchData[1].toUpperCase() : "ARGGHHH!";
+	return yellText;
+};
+
+var substituteText = function(txt) {
+	var matchers = [
+		{regex: /^\(table flip\)$/, processor: tableFlip},
+		{regex: /^\/yell\s*(.*)/, processor: yell}
+	];
+	var matchData;
+	for (var i=0; i < matchers.length; i=i+1) {
+		matchData = txt.match(matchers[i].regex);
+		console.log("regex : " + matchers[i].regex.toString() + "; match data : " + matchData); //debug
+		if (matchData) {
+			return matchers[i].processor(matchData);
 		}
 	}
 
-	//Special parsings
-	displayText = displayText + " "; //This hack provides for detection of the end of the URL.
-	if ((displayText.indexOf("http://") > -1) || (displayText.indexOf("https://") > -1)) {
-		//Convert URL to <a href="URL">URL</a>
-		var index01 = displayText.indexOf("http");
-		var substrLength = displayText.substr(index01).indexOf(" ");
-		var urlString = displayText.substr(index01, substrLength);
-		//Image handling
-		var extension = urlString.substr(urlString.length - 4);
-		if ((extension === ".png") || (extension === ".bmp") || (extension === ".jpg") || (extension === ".gif")) {
-			displayText = displayText.replace(urlString, "<img width=\"200px\" src=\"" + urlString + "\">");
-		} else {
-			displayText = displayText.replace(urlString, "<a href=\"" + urlString + "\">" + urlString + "</a>");
-		}
-	}
+	return txt;
+};
 
-	var hash = {
+var linkHandler = function(txt) {
+	// Save For Later : var regex = /.*(\.bmp|\.gif|\.jpeg|\.jpg|\.png)$/i; 
+	var linkedText = Autolinker.link(txt, { stripPrefix:false });
+	return linkedText;
+};
+
+var processText = function(txt) {
+	var subTxt = substituteText(txt);
+	console.log("substitute : " + subTxt); //debug
+//	txt = linkHandler(txt);
+//	console.log("link handler : " + txt); //debug
+	var linkedTxt = Autolinker.link(subTxt); 
+	return linkedTxt;
+};
+
+// 	//Special parsings
+// 	txt = txt + " "; //This hack provides for detection of the end of the URL.
+// 	if ((txt.indexOf("http://") > -1) || (txt.indexOf("https://") > -1)) {
+// 		//Convert URL to <a href="URL">URL</a>
+// 		var index01 = txt.indexOf("http");
+// 		var substrLength = txt.substr(index01).indexOf(" ");
+// 		var urlString = txt.substr(index01, substrLength);
+// 		//Image handling
+// 		var extension = urlString.substr(urlString.length - 4);
+// 		if ((extension === ".png") || (extension === ".bmp") || (extension === ".jpg") || (extension === ".gif")) {
+// 			txt = txt.replace(urlString, "<img width=\"200px\" src=\"" + urlString + "\">");
+// 		} else {
+// 			txt = txt.replace(urlString, "<a href=\"" + urlString + "\">" + urlString + "</a>");
+// 		}
+// 	}
+// 	return txt;
+// }; 
+
+var packageMsg = function(input) {
+	var msg = input.toString().trim();
+
+	msg = processText(msg);
+
+	var package = {
 		name : userName,
-		text : displayText
+		text : msg
 	};
-	var hashJSON = JSON.stringify(hash);
-	return hashJSON;
+
+	console.log(package); //debug
+
+	return JSON.stringify(package);
 };
 
-// On Enter/Return keypress, send contents of input box to chat server
-var keyvalidate = function(event) {
-	if (event.keyCode === 13) { 
-		var packaged = hashPackage(inputElement.value);
-		client.send(packaged);
-		inputElement.value = "";
-	}
-};
+// EVENT LISTENERS
 
 // Event listener for chat client input
 client.addEventListener("open", function(event) {
@@ -79,5 +111,12 @@ name_input.addEventListener('blur', function() {
 	userName = this.value;
 });
 
-// Event listener for Enter/Return in input box
-inputElement.addEventListener("keydown", keyvalidate);
+// On Enter/Return keypress, send contents of input box to chat server
+inputElement.addEventListener("keydown", function(event) {
+	if (event.keyCode === 13) { 
+		console.log("input box : " + this.value); //debug
+		var packaged = packageMsg(this.value);
+		client.send(packaged);
+		this.value = "";
+	}
+});
