@@ -44,41 +44,45 @@ var substituteText = function(txt) {
 		}
 	}
 
+	// A version of the for loop above with forEach; couldn't get this working earlier.
+	// matchers.forEach(function(matcher) {
+	// 	matchData = txt.match(matcher.regex);
+	// 	console.log("regex : " + matcher.regex.toString() + "; match data : " + matchData); //debug
+	// 	if (matchData) {
+	// 		return matcher.processor(matchData);
+	// 	}
+	// });
+
 	return txt;
 };
 
 var linkHandler = function(txt) {
-	// Save For Later : var regex = /.*(\.bmp|\.gif|\.jpeg|\.jpg|\.png)$/i; 
-	var linkedText = Autolinker.link(txt, { stripPrefix:false });
-	return linkedText;
+	var autolinkedText = Autolinker.link(txt, { 
+		stripPrefix: false,
+		replaceFn: function( autolinker, match ) {
+			if ( match.getType() === 'url' ) {
+				var url = match.getUrl();
+				var imgRegex = /.*(\.bmp|\.gif|\.jpeg|\.jpg|\.png)$/i; 
+				if ( url.match(imgRegex) ) {
+					return '<br /><img width="200px" alt="User-supplied image link" src="' + url + '"><br />';
+				} else {
+					return true;
+				}
+			} else {
+				return true;
+			}
+		}
+	});
+	return autolinkedText;
 };
 
 var processText = function(txt) {
 	var subTxt = substituteText(txt);
 	console.log("substitute : " + subTxt); //debug
-//	txt = linkHandler(txt);
-//	console.log("link handler : " + txt); //debug
-	var linkedTxt = Autolinker.link(subTxt); 
-	return linkedTxt;
+	var processedText = linkHandler(subTxt); 
+	console.log("link handler : " + processedText); //debug
+	return processedText;
 };
-
-// 	//Special parsings
-// 	txt = txt + " "; //This hack provides for detection of the end of the URL.
-// 	if ((txt.indexOf("http://") > -1) || (txt.indexOf("https://") > -1)) {
-// 		//Convert URL to <a href="URL">URL</a>
-// 		var index01 = txt.indexOf("http");
-// 		var substrLength = txt.substr(index01).indexOf(" ");
-// 		var urlString = txt.substr(index01, substrLength);
-// 		//Image handling
-// 		var extension = urlString.substr(urlString.length - 4);
-// 		if ((extension === ".png") || (extension === ".bmp") || (extension === ".jpg") || (extension === ".gif")) {
-// 			txt = txt.replace(urlString, "<img width=\"200px\" src=\"" + urlString + "\">");
-// 		} else {
-// 			txt = txt.replace(urlString, "<a href=\"" + urlString + "\">" + urlString + "</a>");
-// 		}
-// 	}
-// 	return txt;
-// }; 
 
 var packageMsg = function(input) {
 	var msg = input.toString().trim();
