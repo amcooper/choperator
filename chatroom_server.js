@@ -30,10 +30,18 @@ server.on("connection", function(ws) {
 		];
 
 		var index = Math.floor(Math.random() * utterance_array.length);
+		var chatbotHash = {
+			name: chatbot_name,
+			text: utterance_array[index]
+		};
 
 		clients.forEach(function(client) {
-			client.send(JSON.stringify({name:chatbot_name, text:utterance_array[index]}));
+			client.send(JSON.stringify(chatbotHash));
 		});
+
+		all_messages.push(chatbotHash);
+
+		fs.writeFileSync("chat_app_api.json",JSON.stringify({ messages : all_messages }));
 	};
 
 	clients.push(ws); // Add new client to clients array
@@ -58,7 +66,7 @@ server.on("connection", function(ws) {
 	// Update the all_messages array and the text file.
 	all_messages.push(newClientHash);
 
-	fs.writeFileSync("chat_app_api.txt", JSON.stringify({ messages : all_messages }));
+	fs.writeFileSync("chat_app_api.json", JSON.stringify({ messages : all_messages }));
 
 	ws.on("close", function() { // When the user closes the connection
 		var x = clients.indexOf(ws);
@@ -122,7 +130,7 @@ server.on("connection", function(ws) {
 		// Add message to all_messages array and text file
 		all_messages.push(messageHash);
 
-		fs.writeFileSync("chat_app_api.txt", JSON.stringify({ messages : all_messages }));
+		fs.writeFileSync("chat_app_api.json", JSON.stringify({ messages : all_messages }));
 
 		if (clients.length === 1) {
 			setTimeout(ill_chatbot, 1000);
