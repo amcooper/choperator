@@ -8,6 +8,7 @@ var userName = "Anonymous user";
 var userNameElement = document.getElementById("name_input");
 var inputElement = document.getElementById("input_box");
 var chatElement = document.getElementById("chat");
+var userListElement = document.getElementById("user_list");
 var ulElement = document.createElement("ul");
 chatElement.appendChild(ulElement);
 ulElement.style.listStyle = "none";
@@ -43,15 +44,6 @@ var substituteText = function(txt) {
 			return matchers[i].processor(matchData);
 		}
 	}
-
-	// A version of the for loop above with forEach; couldn't get this working earlier.
-	// matchers.forEach(function(matcher) {
-	// 	matchData = txt.match(matcher.regex);
-	// 	console.log("regex : " + matcher.regex.toString() + "; match data : " + matchData); //debug
-	// 	if (matchData) {
-	// 		return matcher.processor(matchData);
-	// 	}
-	// });
 
 	return txt;
 };
