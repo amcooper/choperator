@@ -36,16 +36,17 @@ var substituteText = function(txt) {
 		{regex: /^\(table flip\)$/, processor: tableFlip},
 		{regex: /^\/yell\s*(.*)/, processor: yell}
 	];
-	var matchData;
-	for (var i=0; i < matchers.length; i=i+1) {
-		matchData = txt.match(matchers[i].regex);
-		console.log("regex : " + matchers[i].regex.toString() + "; match data : " + matchData); //debug
+	var matchData, subbedText;
+	// A version of the for loop with forEach; couldn't get this working earlier.
+	matchers.forEach(function(matcher) {
+		matchData = txt.match(matcher.regex);
+		console.log("regex : " + matcher.regex.toString() + "; match data : " + matchData); //debug
 		if (matchData) {
-			return matchers[i].processor(matchData);
+			subbedText = matcher.processor(matchData);
 		}
-	}
-
-	return txt;
+	});
+	console.log("subbedText : " + subbedText); //debug
+	return subbedText || txt;
 };
 
 var linkHandler = function(txt) {
