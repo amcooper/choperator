@@ -90,32 +90,40 @@ server.on("connection", function(ws) {
 	});
 
 	ws.on("message", function(input) { // When the user enters a message
-		var banhammer = false;
-		var banMessage;
+
+		// Banned word test
+		var banhammerTest = function(inputHash){
+			var bannedWords = ["moist", "pamphlet", "tummy", "yummy", "gummi", "gummy", "vainglorious"];
+			var banhammer = false;
+			
+			// Test passes if banned word is found in text
+			for (j=0; j<bannedWords.length; j++) {
+				if (inputHash.text.toLowerCase().indexOf(bannedWords[j]) > -1) {
+					banhammer = true;
+				}
+			}
+
+			return banhammer;	
+		};		
+
 		processedInput = JSON.parse(input);
 		var x = clients.indexOf(ws);
 		usernames[x] = processedInput.name;
 
-		// Check for banned word usage
-		for (j=0; j<bannedWords.length; j++) {
-			if (processedInput.text.toLowerCase().indexOf(bannedWords[j]) > -1) {
-				banMessage = "Dropping the hammer on " + processedInput.name + " for using a banned word.";
-				banhammer = true;
-			}
-		}
-		if (banhammer === true) { 
-			processedInput.name = "Server";
-			processedInput.text = banMessage; 
-		}
-
-		console.log(processedInput.name + " : " + processedInput.text);
-		newMessageHandler({
-			name : processedInput.name,
-			text : processedInput.text
-		});
+		// If banned word is used, replace user message with ban message.
+		var dropHammer = banhammerTest(processedInput);
+		processedInput = (dropHammer && { name:"Server", text:"Dropping the hammer on " + processedInput.name + " for using a banned word." }) || processedInput;
+		// if (dropHammer) {
+		// 	processedInput = {
+		// 		name:"Server",
+		// 		text:"Dropping the hammer on " + processedInput.name + " for using a banned word."
+		// 	};
+		// };
+		console.log(processedInput);
+		newMessageHandler(processedInput);
 
 		// Close connection of banned user.
-		if (banhammer === true) { 
+		if (dropHammer) { 
 			ws.close();
 		}
 
