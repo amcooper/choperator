@@ -4,3 +4,4 @@ npm-debug.log
 /*.env
 nohup.out
 chat_app_api.*
+archive/*

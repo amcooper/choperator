@@ -14,6 +14,30 @@ console.log("Listening on port 3001.");
 
 server.on("connection", function(ws) {
 
+	// Broadcast message to all clients
+	var broadcast = function(hash) {
+		clients.forEach(function(client) {
+			client.send(JSON.stringify(hash));
+		});
+	};
+
+	// Add message to message array
+	var pushMessage = function(hash) {
+		all_messages.push(hash);
+	};
+
+	// Add message to external file
+	var fileMessage = function(msgArray) {
+		fs.writeFileSync("chat_app_api.json",JSON.stringify({ messages : msgArray }));
+	};
+
+	// New message handling suite
+	var newMessageHandler = function(hash) {
+		broadcast(hash);
+		pushMessage(hash);
+		fileMessage(all_messages); //asynch?
+	};
+
 	// Ill Chatbot
 	var ill_chatbot = function() {
 		var chatbot_name = "Ill Chatbot";
@@ -30,18 +54,11 @@ server.on("connection", function(ws) {
 		];
 
 		var index = Math.floor(Math.random() * utterance_array.length);
-		var chatbotHash = {
+
+		newMessageHandler({
 			name: chatbot_name,
 			text: utterance_array[index]
-		};
-
-		clients.forEach(function(client) {
-			client.send(JSON.stringify(chatbotHash));
 		});
-
-		all_messages.push(chatbotHash);
-
-		fs.writeFileSync("chat_app_api.json",JSON.stringify({ messages : all_messages }));
 	};
 
 	clients.push(ws); // Add new client to clients array
@@ -53,40 +70,20 @@ server.on("connection", function(ws) {
 		ws.send(JSON.stringify(message));
 	});
 
-	var newClientHash = {
+	newMessageHandler({
 		name : "Server",
 		text : "Client connected."
-	};
-
-	// Advise all clients of new client connection.
-	clients.forEach(function(client) {
-		client.send(JSON.stringify(newClientHash));
 	});
-
-	// Update the all_messages array and the text file.
-	all_messages.push(newClientHash);
-
-	fs.writeFileSync("chat_app_api.json", JSON.stringify({ messages : all_messages }));
 
 	ws.on("close", function() { // When the user closes the connection
 		var x = clients.indexOf(ws);
 		clients.splice(x,1); // Remove her from the clients array
 		console.log("User " + usernames[x] + " has disconnected.");
 		console.log("Clients connected: " + clients.length);
-		var exitingClientHash = {
+		newMessageHandler({
 			name : "Server",
 			text : "User " + usernames[x] + " has disconnected."
-		};
-
-		// Advise all clients of client's disconnection
-		clients.forEach(function(client) {
-			client.send(JSON.stringify(exitingClientHash));
 		});
-
-		// Update the all_messages array and the text file.
-		all_messages.push(exitingClientHash);
-
-		fs.writeFileSync("chat_app_api.json", JSON.stringify({ messages : all_messages }));		
 
 		// Remove user from list of current usernames
 		usernames.splice(x,1);
@@ -112,14 +109,9 @@ server.on("connection", function(ws) {
 		}
 
 		console.log(processedInput.name + " : " + processedInput.text);
-		var messageHash = {
+		newMessageHandler({
 			name : processedInput.name,
 			text : processedInput.text
-		};
-
-		// Send new message (or ban message) to all clients.
-		clients.forEach(function(client) {
-			client.send(JSON.stringify(messageHash));
 		});
 
 		// Close connection of banned user.
@@ -127,11 +119,7 @@ server.on("connection", function(ws) {
 			ws.close();
 		}
 
-		// Add message to all_messages array and text file
-		all_messages.push(messageHash);
-
-		fs.writeFileSync("chat_app_api.json", JSON.stringify({ messages : all_messages }));
-
+		// Ill Chatbot responds to the messages of a lone user.
 		if (clients.length === 1) {
 			setTimeout(ill_chatbot, 1000);
 		}
