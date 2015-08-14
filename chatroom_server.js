@@ -3,7 +3,7 @@
 var WebSocketServer = require("ws").Server;
 var server = new WebSocketServer({port:3001});
 
-var fs = require("fs");
+var fs = require("fs"), _ = require("underscore");
 
 var clients = [];
 var usernames = [];
@@ -14,123 +14,111 @@ console.log("Listening on port 3001.");
 
 server.on("connection", function(ws) {
 
-	// Broadcast message to all clients
-	var broadcast = function(hash) {
-		clients.forEach(function(client) {
-			client.send(JSON.stringify(hash));
-		});
-	};
+  // Broadcast message to all clients
+  var broadcast = function(hash) {
+    clients.forEach(function(client) {
+      client.send(JSON.stringify(hash));
+    });
+  };
 
-	// Add message to message array
-	var pushMessage = function(hash) {
-		all_messages.push(hash);
-	};
+  // Add message to message array
+  var pushMessage = function(hash) {
+    all_messages.push(hash);
+  };
 
-	// Add message to external file
-	var fileMessage = function(msgArray) {
-		fs.writeFileSync("chat_app_api.json",JSON.stringify({ messages : msgArray }));
-	};
+  // Add message to external file
+  var fileMessage = function(msgArray) {
+    fs.writeFileSync("chat_app_api.json",JSON.stringify({ messages : msgArray }));
+  };
 
-	// New message handling suite
-	var newMessageHandler = function(hash) {
-		broadcast(hash);
-		pushMessage(hash);
-		fileMessage(all_messages); //asynch?
-	};
+  // New message handling suite
+  var newMessageHandler = function(hash) {
+    broadcast(hash);
+    pushMessage(hash);
+    fileMessage(all_messages); //asynch?
+  };
 
-	// Ill Chatbot
-	var ill_chatbot = function() {
-		var chatbot_name = "Ill Chatbot";
-		var utterance_array = [
-			"More than I imagined.", 
-			"Oops sorry; that wasn't meant for you",
-			"Say what?",
-			"Less of an issue.", 
-			"I think it was in June or July.", 
-			"Can't remember.", 
-			"Well you know what they say.", 
-			"I don't think I can reasonably be held responsible for that.", 
-			"Well bless your heart." 
-		];
+  // Ill Chatbot
+  var ill_chatbot = function() {
+    var chatbot_name = "Ill Chatbot";
+    var utterance_array = [
+    "More than I imagined.", 
+    "Oops sorry; that wasn't meant for you",
+    "Say what?",
+    "Less of an issue.", 
+    "I think it was in June or July.", 
+    "Can't remember.", 
+    "Well you know what they say.", 
+    "I don't think I can reasonably be held responsible for that.", 
+    "Well bless your heart." 
+    ];
 
-		var index = Math.floor(Math.random() * utterance_array.length);
+    var index = Math.floor(Math.random() * utterance_array.length);
 
-		newMessageHandler({
-			name: chatbot_name,
-			text: utterance_array[index]
-		});
-	};
+    newMessageHandler({
+      name: chatbot_name,
+      text: utterance_array[index]
+    });
+  };
 
-	clients.push(ws); // Add new client to clients array
+  clients.push(ws); // Add new client to clients array
 
-	console.log("Clients connected: " + clients.length);
+  console.log("Clients connected: " + clients.length);
 
-	// Send all current chat content to new client
-	all_messages.forEach(function(message) {
-		ws.send(JSON.stringify(message));
-	});
+  // Send all current chat content to new client
+  all_messages.forEach(function(message) {
+    ws.send(JSON.stringify(message));
+  });
 
-	newMessageHandler({
-		name : "Server",
-		text : "Client connected."
-	});
+  newMessageHandler({
+    name : "Server",
+    text : "Client connected."
+  });
 
-	ws.on("close", function() { // When the user closes the connection
-		var x = clients.indexOf(ws);
-		clients.splice(x,1); // Remove her from the clients array
-		console.log("User " + usernames[x] + " has disconnected.");
-		console.log("Clients connected: " + clients.length);
-		newMessageHandler({
-			name : "Server",
-			text : "User " + usernames[x] + " has disconnected."
-		});
+  ws.on("close", function() { // When the user closes the connection
+    var x = clients.indexOf(ws);
+    clients.splice(x,1); // Remove her from the clients array
+    console.log("User " + usernames[x] + " has disconnected.");
+    console.log("Clients connected: " + clients.length);
+    newMessageHandler({
+      name : "Server",
+      text : "User " + usernames[x] + " has disconnected."
+    });
 
-		// Remove user from list of current usernames
-		usernames.splice(x,1);
-	});
+    // Remove user from list of current usernames
+    usernames.splice(x,1);
+  });
 
-	ws.on("message", function(input) { // When the user enters a message
+  ws.on("message", function(input) { // When the user enters a message
 
-		// Banned word test
-		var banhammerTest = function(inputHash){
-			var bannedWords = ["moist", "pamphlet", "tummy", "yummy", "gummi", "gummy", "vainglorious"];
-			var banhammer = false;
-			
-			// Test passes if banned word is found in text
-			for (j=0; j<bannedWords.length; j++) {
-				if (inputHash.text.toLowerCase().indexOf(bannedWords[j]) > -1) {
-					banhammer = true;
-				}
-			}
+    // Banned word test
+    var banhammerTest = function(inputHash) {
+      var bannedWords = ["moist", "pamphlet", "tummy", "yummy", "gummi", "gummy", "vainglorious"];
+      var banhammer = false;
+      
+      // Test passes if banned word is found in text
+      return (_.intersection(bannedWords, inputHash.text.split(' ')).length > 0);
+    };    
 
-			return banhammer;	
-		};		
+    var processedInput = JSON.parse(input);
+    var x = clients.indexOf(ws);
+    usernames[x] = processedInput.name;
 
-		processedInput = JSON.parse(input);
-		var x = clients.indexOf(ws);
-		usernames[x] = processedInput.name;
+    // Close connection of banned user.
+    if (banhammerTest(processedInput)) { 
+      newMessageHandler({
+        name:"Server", 
+        text:"Dropping the hammer on " + processedInput.name + " for using a banned word." 
+      });
+      ws.close();
+    } else {
+      newMessageHandler(processedInput);      
+    }
 
-		// If banned word is used, replace user message with ban message.
-		var dropHammer = banhammerTest(processedInput);
-		processedInput = (dropHammer && { name:"Server", text:"Dropping the hammer on " + processedInput.name + " for using a banned word." }) || processedInput;
-		// if (dropHammer) {
-		// 	processedInput = {
-		// 		name:"Server",
-		// 		text:"Dropping the hammer on " + processedInput.name + " for using a banned word."
-		// 	};
-		// };
-		console.log(processedInput);
-		newMessageHandler(processedInput);
-
-		// Close connection of banned user.
-		if (dropHammer) { 
-			ws.close();
-		}
-
-		// Ill Chatbot responds to the messages of a lone user.
-		if (clients.length === 1) {
-			setTimeout(ill_chatbot, 1000);
-		}
-	});
+    // Ill Chatbot responds to the messages of a lone user.
+    if (clients.length === 1) {
+      setTimeout(ill_chatbot, 1000);
+    }
+  });
 
 });
