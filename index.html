@@ -1,32 +1,33 @@
 <!-- client_browser.html -->
 <!DOCTYPE html>
 <html>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<head>
-  <link href="http://fonts.googleapis.com/css?family=Roboto&subset=latin" rel="stylesheet" type="text/css">
-  <link href="./stylesheet.css" rel="stylesheet" type="type/css">
-</head>
-<body>
-  <div id="main">
-    <header>
-      <h3>Choperator</h3>
-      <h4>real-time web chat</h4>
-    </header>
-    <div id="chat_main">
-      <div id="top"></div>
-      <div id="container">
-        <p id="chat"></p>
-        <div id="footer-spacer"></div> 
-      </div> <!-- container -->
-      <div id="footer">
-        <input id="name_input" placeholder="Your name" autofocus>
-        <input id="input_box" size="70">
-      </div> <!-- footer -->
-      <div id="user_list">
-      </div><!-- user_list -->
-    </div> <!-- chat_main -->
-  </div> <!-- main -->
-  <script type="text/javascript" src="./dist/Autolinker.min.js"></script>
-  <script type="text/javascript" src="./client_browser.js"></script>
-</body>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="http://fonts.googleapis.com/css?family=Roboto&subset=latin" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="./stylesheet.css" type="text/css">
+  </head>
+  
+  <body>
+    <div id="container">
+      <div id="chat">
+        <header>
+          <h3>Choperator</h3>
+          <h4>real-time web chat</h4>
+        </header>
+        <div id="chat_main"></div>
+        <footer>
+          <input id="name_input" placeholder="Your name" autofocus />
+          <input id="input_box" size="70" />
+        </footer>
+      </div> <!-- chat -->
+      
+      <div id="user_list"></div>
+    </div> <!-- container -->
+    
+    <script type="text/javascript" src="./dist/Autolinker.min.js"></script>
+    <script type="text/javascript" src="./client_browser.js"></script>
+
+  </body>
+
 </html>

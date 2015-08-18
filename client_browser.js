@@ -7,17 +7,17 @@ var client = new WebSocket("ws://localhost:3001");
 var userName = "Anonymous user";
 var userNameElement = document.getElementById("name_input");
 var inputElement = document.getElementById("input_box");
-var chatElement = document.getElementById("chat");
+var chatMainElement = document.getElementById("chat_main");
 var userListElement = document.getElementById("user_list");
 var ulElement = document.createElement("ul");
-chatElement.appendChild(ulElement);
+chatMainElement.appendChild(ulElement);
 ulElement.style.listStyle = "none";
 
 var addItem = function(inputText) {
   var newLiElement = document.createElement("li");
   newLiElement.innerHTML = inputText + "<br />";
   ulElement.appendChild(newLiElement);
-  chatElement.scrollTop = chatElement.scrollHeight;
+  chatMainElement.scrollTop = chatMainElement.scrollHeight;
 };
 
 var tableFlip = function(matchData) {
