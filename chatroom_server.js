@@ -101,7 +101,7 @@ server.on("connection", function(ws) {
       var banhammer = false;
       
       // Test passes if banned word is found in text
-      return (_.intersection(bannedWords, inputHash.text.split(' ')).length > 0);
+      return (_.intersection(bannedWords, inputHash.text.toLowerCase().split(' ')).length > 0);
     };    
 
     var processedInput = JSON.parse(input);
