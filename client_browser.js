@@ -13,9 +13,13 @@ var ulElement = document.createElement("ul");
 chatMainElement.appendChild(ulElement);
 ulElement.style.listStyle = "none";
 
-var addItem = function(inputText) {
+var addItem = function(inputHash) {
   var newLiElement = document.createElement("li");
-  newLiElement.innerHTML = inputText + "<br />";
+  newLiElement.innerHTML = inputHash.name + ": " + inputHash.text;
+  var colorIndex = (inputHash.userIndex - 2) % 8 + 3;
+  var colorClassShim = colorIndex > 9 ? "" : "0";
+  var colorClass = "user" + colorClassShim + colorIndex;
+  $( newLiElement ).addClass(colorClass);
   ulElement.appendChild(newLiElement);
   chatMainElement.scrollTop = chatMainElement.scrollHeight;
 };
@@ -96,10 +100,10 @@ var packageMsg = function(input) {
 
 // Event listener for chat client input
 client.addEventListener("open", function(event) {
-  addItem("Connected.");
+  addItem({userIndex:0, name:"Server", text:"You're connected."});
   client.addEventListener("message", function(event) {
     var hash = JSON.parse(event.data);
-    addItem(hash.name + ": " + hash.text);
+    addItem(hash);
   });
 });
 

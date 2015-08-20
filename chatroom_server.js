@@ -6,7 +6,8 @@ var server = new WebSocketServer({port:3001});
 var fs = require("fs"), _ = require("underscore");
 
 var clients = [];
-var usernames = [];
+var chatbot_name = "Ill Chatbot";
+var usernames = ["Server", chatbot_name];
 var all_messages = [];
 var bannedWords = ["moist", "pamphlet", "tummy", "yummy", "gummi", "gummy", "vainglorious"];
 
@@ -35,12 +36,11 @@ server.on("connection", function(ws) {
   var newMessageHandler = function(hash) {
     broadcast(hash);
     pushMessage(hash);
-    fileMessage(all_messages); //asynch?
+    fileMessage(all_messages);
   };
 
   // Ill Chatbot
   var ill_chatbot = function() {
-    var chatbot_name = "Ill Chatbot";
     var utterance_array = [
     "More than I imagined.", 
     "Oops sorry; that wasn't meant for you",
@@ -56,6 +56,7 @@ server.on("connection", function(ws) {
     var index = Math.floor(Math.random() * utterance_array.length);
 
     newMessageHandler({
+      userIndex: 1,
       name: chatbot_name,
       text: utterance_array[index]
     });
@@ -71,22 +72,25 @@ server.on("connection", function(ws) {
   });
 
   newMessageHandler({
+    userIndex: 0,
     name : "Server",
     text : "Client connected."
   });
 
   ws.on("close", function() { // When the user closes the connection
-    var x = clients.indexOf(ws);
-    clients.splice(x,1); // Remove her from the clients array
-    console.log("User " + usernames[x] + " has disconnected.");
+    var clientIndex = clients.indexOf(ws);
+    var allUserIndex = clientIndex + 2;
+    clients.splice(clientIndex,1); // Remove her from the clients array
+    console.log("User " + usernames[allUserIndex] + " has disconnected.");
     console.log("Clients connected: " + clients.length);
     newMessageHandler({
+      userIndex: 0,
       name : "Server",
-      text : "User " + usernames[x] + " has disconnected."
+      text : "User " + usernames[allUserIndex] + " has disconnected."
     });
 
     // Remove user from list of current usernames
-    usernames.splice(x,1);
+    usernames.splice(allUserIndex,1);
   });
 
   ws.on("message", function(input) { // When the user enters a message
@@ -101,14 +105,16 @@ server.on("connection", function(ws) {
     };    
 
     var processedInput = JSON.parse(input);
-    var x = clients.indexOf(ws);
-    usernames[x] = processedInput.name;
+    var allUserIndex = clients.indexOf(ws) + 2; // [N.B. this hack appears earlier, in the close listener]
+    usernames[allUserIndex] = processedInput.name;
+    processedInput.userIndex = processedInput.userIndex || allUserIndex;
 
     // Close connection of banned user.
     if (banhammerTest(processedInput)) { 
       newMessageHandler({
-        name:"Server", 
-        text:"Dropping the hammer on " + processedInput.name + " for using a banned word." 
+        userIndex: 0,
+        name: "Server", 
+        text: "Dropping the hammer on " + processedInput.name + " for using a banned word." 
       });
       ws.close();
     } else {
