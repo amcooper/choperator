@@ -13,13 +13,26 @@ var ulElement = document.createElement("ul");
 chatMainElement.appendChild(ulElement);
 ulElement.style.listStyle = "none";
 
+var htmlSanitize = function(unsafe) {
+  return unsafe
+   .replace(/&/g, "&amp;")
+   .replace(/</g, "&lt;")
+   .replace(/>/g, "&gt;")
+   .replace(/"/g, "&quot;")
+   .replace(/'/g, "&#039;");
+ };
+
+var colorClass = function(index) { //builds a class name like "user03" or "user10"
+  // Initial users are the server and the chatbot. New users' color classes cycle from 3 through 10.
+  index = (index - 2) % 8 + 3; 
+  var shim = index > 9 ? "" : "0";
+  return "user" + shim + index;
+};
+
 var addItem = function(inputHash) {
   var newLiElement = document.createElement("li");
-  newLiElement.innerHTML = inputHash.name + ": " + inputHash.text;
-  var colorIndex = (inputHash.userIndex - 2) % 8 + 3;
-  var colorClassShim = colorIndex > 9 ? "" : "0";
-  var colorClass = "user" + colorClassShim + colorIndex;
-  $( newLiElement ).addClass(colorClass);
+  newLiElement.innerHTML = htmlSanitize(inputHash.name + ": " + inputHash.text);
+  $( newLiElement ).addClass(colorClass(inputHash.userIndex));
   ulElement.appendChild(newLiElement);
   chatMainElement.scrollTop = chatMainElement.scrollHeight;
 };
