@@ -21,11 +21,56 @@ header {
   top: 0;
 }
 
+#user_list {
+  font-family: "Bodoni 72 Oldstyle", Georgia, serif;
+  top: 120px;
+  position: absolute;
+}
+
+.user01 {
+  color: black;
+}
+
+.user02 {
+  color: firebrick;
+}
+
+.user03 {
+  color: navy;
+}
+
+.user04 {
+  color: darkgreen;
+}
+
+.user05 {
+  color: darkviolet;
+}
+
+.user06 {
+  color: darkred;
+}
+
+.user07 {
+  color: brown;
+}
+
+.user08 {
+  color: midnightblue;
+}
+
+.user09 {
+  color: teal;
+}
+
+.user10 {
+  color: purple;
+}
 #chat_main {
   font-family: "Bodoni 72 Oldstyle", Georgia, serif; 
-  top: 120px;
+  top: 180px;
   min-height: 200px;
-  max-height: 540px;
+  max-height: 480px;
   left: 0;
   width: 80%;
   position: absolute;

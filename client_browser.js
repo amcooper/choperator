@@ -13,9 +13,26 @@ var ulElement = document.createElement("ul");
 chatMainElement.appendChild(ulElement);
 ulElement.style.listStyle = "none";
 
-var addItem = function(inputText) {
+var htmlSanitize = function(unsafe) {
+  return unsafe
+   .replace(/&/g, "&amp;")
+   .replace(/</g, "&lt;")
+   .replace(/>/g, "&gt;")
+   .replace(/"/g, "&quot;")
+   .replace(/'/g, "&#039;");
+ };
+
+var colorClass = function(index) { //builds a class name like "user03" or "user10"
+  // Initial users are the server and the chatbot. New users' color classes cycle from 3 through 10.
+  index = (index - 2) % 8 + 3; 
+  var shim = index > 9 ? "" : "0";
+  return "user" + shim + index;
+};
+
+var addItem = function(inputHash) {
   var newLiElement = document.createElement("li");
-  newLiElement.innerHTML = inputText + "<br />";
+  newLiElement.innerHTML = htmlSanitize(inputHash.name + ": " + inputHash.text);
+  $( newLiElement ).addClass(colorClass(inputHash.userIndex));
   ulElement.appendChild(newLiElement);
   chatMainElement.scrollTop = chatMainElement.scrollHeight;
 };
@@ -96,10 +113,10 @@ var packageMsg = function(input) {
 
 // Event listener for chat client input
 client.addEventListener("open", function(event) {
-  addItem("Connected.");
+  addItem({userIndex:0, name:"Server", text:"You're connected."});
   client.addEventListener("message", function(event) {
     var hash = JSON.parse(event.data);
-    addItem(hash.name + ": " + hash.text);
+    addItem(hash);
   });
 });
 
