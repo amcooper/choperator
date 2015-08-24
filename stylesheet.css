@@ -27,45 +27,52 @@ header {
   position: absolute;
 }
 
-.user01 {
+.user0 {
   color: black;
 }
 
-.user02 {
+.user1 {
   color: firebrick;
 }
 
-.user03 {
-  color: navy;
+.user2 {
+  color: purple;
 }
 
-.user04 {
+.user3 {
   color: darkgreen;
 }
 
-.user05 {
-  color: darkviolet;
-}
-
-.user06 {
+.user4 {
   color: darkred;
 }
 
-.user07 {
+.user5 {
+  color: navy;
+}
+
+.user6 {
+  color: darkviolet;
+}
+
+.user7 {
   color: brown;
 }
 
-.user08 {
+.user8 {
   color: midnightblue;
 }
 
-.user09 {
+.user9 {
   color: teal;
 }
 
-.user10 {
-  color: purple;
+.timestamp {
+  color: gray;
+  font-family: "Courier New", monospace, serif;
+  font-size: small;
 }
+
 #chat_main {
   font-family: "Bodoni 72 Oldstyle", Georgia, serif; 
   top: 180px;

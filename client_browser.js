@@ -22,16 +22,36 @@ var htmlSanitize = function(unsafe) {
    .replace(/'/g, "&#039;");
  };
 
-var colorClass = function(index) { //builds a class name like "user03" or "user10"
-  // Initial users are the server and the chatbot. New users' color classes cycle from 3 through 10.
-  index = (index - 2) % 8 + 3; 
-  var shim = index > 9 ? "" : "0";
-  return "user" + shim + index;
+var colorClass = function(index) { //builds a class name like "user3" or "user10"
+  // Initial users are the server and the chatbot. New users' color classes cycle from 2 through 9.
+  var allUserOffset = 2, colorTotal = 8;
+  index = (index - allUserOffset) % colorTotal + allUserOffset; 
+  return "user" + index.toString();
 };
 
 var addItem = function(inputHash) {
+  console.log(inputHash);
+  var options = { weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'numeric' };
   var newLiElement = document.createElement("li");
-  newLiElement.innerHTML = htmlSanitize(inputHash.name + ": " + inputHash.text);
+  var timeSpanElement = document.createElement("span");
+  var nameSpanElement = document.createElement("span");
+  var textSpanElement = document.createElement("span");
+  $( timeSpanElement ).addClass("timestamp");
+  $( nameSpanElement ).addClass("username");
+  $( textSpanElement ).addClass("text");
+  var latestLiElement = ulElement.lastChild;
+  // if lastLi's timestamp-child's timestamp.getDate === currentTimestamp.getDate {
+  //      render hh:mm
+  // } else {
+  //      render mmm dd hh:mm
+  // }
+  // timeSpanElement.innerHTML = render;
+  timeSpanElement.innerHTML = inputHash.timestamp + "  "; //.toLocaleDateString('en-US', options);
+  nameSpanElement.innerHTML = htmlSanitize(inputHash.name + ": ");
+  textSpanElement.innerHTML = htmlSanitize(inputHash.text);
+  newLiElement.appendChild(timeSpanElement);
+  newLiElement.appendChild(nameSpanElement);
+  newLiElement.appendChild(textSpanElement);
   $( newLiElement ).addClass(colorClass(inputHash.userIndex));
   ulElement.appendChild(newLiElement);
   chatMainElement.scrollTop = chatMainElement.scrollHeight;
@@ -99,21 +119,22 @@ var packageMsg = function(input) {
 
   msg = processText(msg);
 
-  var package = {
+  var thePackage = {
+    timestamp : new Date(),
     name : userName,
     text : msg
   };
 
-  console.log(package); //debug
+  console.log(thePackage); //debug
 
-  return JSON.stringify(package);
+  return JSON.stringify(thePackage);
 };
 
 // EVENT LISTENERS
 
 // Event listener for chat client input
 client.addEventListener("open", function(event) {
-  addItem({userIndex:0, name:"Server", text:"You're connected."});
+  addItem({timestamp:new Date(), userIndex:0, name:"Server", text:"You're connected."});
   client.addEventListener("message", function(event) {
     var hash = JSON.parse(event.data);
     addItem(hash);

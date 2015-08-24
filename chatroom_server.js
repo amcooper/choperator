@@ -7,8 +7,9 @@ var fs = require("fs"), _ = require("underscore");
 
 var clients = [];
 var chatbot_name = "Ill Chatbot";
-var usernames = ["Server", chatbot_name];
+var usernames = ["Server", chatbot_name], allUserOffset = 2;
 var all_messages = [];
+var options = { weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'numeric' };
 var bannedWords = ["moist", "pamphlet", "tummy", "yummy", "gummi", "gummy", "vainglorious"];
 
 console.log("Listening on port 3001.");
@@ -56,6 +57,7 @@ server.on("connection", function(ws) {
     var index = Math.floor(Math.random() * utterance_array.length);
 
     newMessageHandler({
+      timestamp: new Date().toLocaleDateString('en-US', options),
       userIndex: 1,
       name: chatbot_name,
       text: utterance_array[index]
@@ -72,6 +74,7 @@ server.on("connection", function(ws) {
   });
 
   newMessageHandler({
+    timestamp: new Date().toLocaleDateString('en-US', options),
     userIndex: 0,
     name : "Server",
     text : "Client connected."
@@ -79,11 +82,12 @@ server.on("connection", function(ws) {
 
   ws.on("close", function() { // When the user closes the connection
     var clientIndex = clients.indexOf(ws);
-    var allUserIndex = clientIndex + 2;
+    var allUserIndex = clientIndex + allUserOffset;
     clients.splice(clientIndex,1); // Remove her from the clients array
     console.log("User " + usernames[allUserIndex] + " has disconnected.");
     console.log("Clients connected: " + clients.length);
     newMessageHandler({
+      timestamp: new Date().toLocaleDateString('en-US', options),
       userIndex: 0,
       name : "Server",
       text : "User " + usernames[allUserIndex] + " has disconnected."
@@ -105,13 +109,14 @@ server.on("connection", function(ws) {
     };    
 
     var processedInput = JSON.parse(input);
-    var allUserIndex = clients.indexOf(ws) + 2; // [N.B. this hack appears earlier, in the close listener]
+    var allUserIndex = clients.indexOf(ws) + allUserOffset;
     usernames[allUserIndex] = processedInput.name;
     processedInput.userIndex = processedInput.userIndex || allUserIndex;
 
     // Close connection of banned user.
     if (banhammerTest(processedInput)) { 
       newMessageHandler({
+        timestamp: new Date().toLocaleDateString('en-US', options),
         userIndex: 0,
         name: "Server", 
         text: "Dropping the hammer on " + processedInput.name + " for using a banned word." 
