@@ -44,20 +44,22 @@ server.on("connection", function(ws) {
   var ill_chatbot = function() {
     var utterance_array = [
     "More than I imagined.", 
-    "Oops sorry; that wasn't meant for you",
+    "Oops sorry; that wasn't meant for you.",
     "Say what?",
     "Less of an issue.", 
     "I think it was in June or July.", 
     "Can't remember.", 
     "Well you know what they say.", 
     "I don't think I can reasonably be held responsible for that.", 
-    "Well bless your heart." 
+    "Well bless your heart.",
+    "Oh boy. How much would *that* cost?",
+    "Don't you think that's a bit much?",
     ];
 
     var index = Math.floor(Math.random() * utterance_array.length);
 
     newMessageHandler({
-      timestamp: new Date().toLocaleDateString('en-US', options),
+      timestamp: new Date(),
       userIndex: 1,
       name: chatbot_name,
       text: utterance_array[index]
@@ -74,7 +76,7 @@ server.on("connection", function(ws) {
   });
 
   newMessageHandler({
-    timestamp: new Date().toLocaleDateString('en-US', options),
+    timestamp: new Date(),
     userIndex: 0,
     name : "Server",
     text : "Client connected."
@@ -87,7 +89,7 @@ server.on("connection", function(ws) {
     console.log("User " + usernames[allUserIndex] + " has disconnected.");
     console.log("Clients connected: " + clients.length);
     newMessageHandler({
-      timestamp: new Date().toLocaleDateString('en-US', options),
+      timestamp: new Date(),
       userIndex: 0,
       name : "Server",
       text : "User " + usernames[allUserIndex] + " has disconnected."
@@ -116,7 +118,7 @@ server.on("connection", function(ws) {
     // Close connection of banned user.
     if (banhammerTest(processedInput)) { 
       newMessageHandler({
-        timestamp: new Date().toLocaleDateString('en-US', options),
+        timestamp: new Date(),
         userIndex: 0,
         name: "Server", 
         text: "Dropping the hammer on " + processedInput.name + " for using a banned word." 
