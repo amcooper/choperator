@@ -4,11 +4,13 @@ var WebSocketServer = require("ws").Server;
 var server = new WebSocketServer({port:3001});
 
 var fs = require("fs"), _ = require("underscore");
+var moment = require("moment");
 
 var clients = [];
 var chatbot_name = "Ill Chatbot";
 var usernames = ["Server", chatbot_name], allUserOffset = 2;
 var all_messages = [];
+var formatString = "ddd MMM DD, YYYY h:m a";
 var options = { weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'numeric' };
 var bannedWords = ["moist", "pamphlet", "tummy", "yummy", "gummi", "gummy", "vainglorious"];
 
@@ -59,7 +61,7 @@ server.on("connection", function(ws) {
     var index = Math.floor(Math.random() * utterance_array.length);
 
     newMessageHandler({
-      timestamp: new Date(),
+      timestamp: moment().format(formatString),
       userIndex: 1,
       name: chatbot_name,
       text: utterance_array[index]
@@ -69,6 +71,7 @@ server.on("connection", function(ws) {
   clients.push(ws); // Add new client to clients array
 
   console.log("Clients connected: " + clients.length);
+  console.log(moment().format(formatString));
 
   // Send all current chat content to new client
   all_messages.forEach(function(message) {
@@ -76,7 +79,7 @@ server.on("connection", function(ws) {
   });
 
   newMessageHandler({
-    timestamp: new Date(),
+    timestamp: moment().format(formatString),
     userIndex: 0,
     name : "Server",
     text : "Client connected."
@@ -89,7 +92,7 @@ server.on("connection", function(ws) {
     console.log("User " + usernames[allUserIndex] + " has disconnected.");
     console.log("Clients connected: " + clients.length);
     newMessageHandler({
-      timestamp: new Date(),
+      timestamp: moment().format(formatString),
       userIndex: 0,
       name : "Server",
       text : "User " + usernames[allUserIndex] + " has disconnected."
@@ -118,7 +121,7 @@ server.on("connection", function(ws) {
     // Close connection of banned user.
     if (banhammerTest(processedInput)) { 
       newMessageHandler({
-        timestamp: new Date(),
+        timestamp: moment().format(formatString),
         userIndex: 0,
         name: "Server", 
         text: "Dropping the hammer on " + processedInput.name + " for using a banned word." 
