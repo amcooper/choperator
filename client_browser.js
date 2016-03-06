@@ -1,10 +1,28 @@
 // client_browser.js
 
+// 2016-03-06: Use data attributes and momentjs and setInterval to update relative timestamps.
+// Pseudocode below
+//
+// ***
+//
+// var relative = function(timestamp) {
+//   document.getElementByAttribute("data-timestamp").forEach(el) {
+//     var stamp;
+//     var diff = moment() - moment(el.data-timestamp);
+//     if (diff > 6 days) { stamp = moment(el.data-timestamp).format("ddd MMM DD, YYYY hh:mm:ss a") }
+//       else if (diff > 24 hours) { stamp = moment(el.data-timestamp).format("dddd hh:mm:ss a") }
+//       else { stamp = moment(el.data-timestamp).fromNow() };
+//     el.innerHTML = stamp;
+//   }
+// };
+//
+// ***
+
 // The next two lines can have their commenting status toggled to cover local and server hosting.
 var client = new WebSocket("ws://localhost:3001");
 // var client = new WebSocket("ws://theadamcooper.com:3001");
 
-var formatString = "ddd MMM DD, YYYY h:mm:ss a";
+var formatString = "ddd MMM DD, YYYY hh:mm:ss a";
 var userName = "Anonymous user";
 var userNameElement = document.getElementById("name_input");
 var inputElement = document.getElementById("input_box");
@@ -135,6 +153,8 @@ var packageMsg = function(input) {
 
 // Event listener for chat client input
 client.addEventListener("open", function(event) {
+
+  // 2016-03-06 This text is displayed before the chat history. It should wait for the chat history to come from the server before displaying. Check documentation of Node.js Websockets.
   addItem({timestamp:moment().format(formatString), userIndex:0, name:"Server", text:"You're connected."});
   client.addEventListener("message", function(event) {
     var hash = JSON.parse(event.data);
