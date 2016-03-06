@@ -1,7 +1,11 @@
 * {
     -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%; /* The Snook Font Size */
 }
 
 body {
@@ -68,9 +72,23 @@ header {
 }
 
 .timestamp {
-  color: gray;
+  color: #777777;
   font-family: "Courier New", monospace, serif;
-  font-size: small;
+  /* The Snook Font Size */
+  font-size: 10px;
+  font-size: 1.0rem;
+}
+
+.username {
+  /* The Snook Font Size */
+  font-size: 16px;
+  font-size: 1.6rem;
+}
+
+.text {
+  /* The Snook Font Size */
+  font-size: 16px;
+  font-size: 1.6rem;
 }
 
 #chat_main {
