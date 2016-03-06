@@ -10,7 +10,7 @@ var clients = [];
 var chatbot_name = "Ill Chatbot";
 var usernames = ["Server", chatbot_name], allUserOffset = 2;
 var all_messages = [];
-var formatString = "ddd MMM DD, YYYY h:m a";
+var formatString = "ddd MMM DD, YYYY h:mm:ss a";
 var options = { weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'numeric' };
 var bannedWords = ["moist", "pamphlet", "tummy", "yummy", "gummi", "gummy", "vainglorious"];
 
