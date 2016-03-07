@@ -50,7 +50,7 @@ var colorClass = function(index) { //builds a class name like "user3" or "user10
 
 var addItem = function(inputHash) {
   console.log(inputHash);
-  var options = { weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'numeric' };
+  // var options = { weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'numeric' };
   var newLiElement = document.createElement("li");
   var timeSpanElement = document.createElement("span");
   var nameSpanElement = document.createElement("span");
@@ -65,7 +65,9 @@ var addItem = function(inputHash) {
   //      render mmm dd hh:mm
   // }
   // timeSpanElement.innerHTML = render;
-  timeSpanElement.innerHTML = inputHash.timestamp + "  "; //.toLocaleDateString('en-US', options);
+  timeSpanElement.dataset.timestamp = inputHash.timestamp;
+  timeSpanElement.innerHTML = moment.unix( inputHash.timestamp ).fromNow() + "  ";
+  // timeSpanElement.innerHTML = inputHash.timestamp + "  "; //.toLocaleDateString('en-US', options);
   nameSpanElement.innerHTML = htmlSanitize(inputHash.name + ": ");
   textSpanElement.innerHTML = htmlSanitize(inputHash.text);
   newLiElement.appendChild(timeSpanElement);
@@ -139,7 +141,7 @@ var packageMsg = function(input) {
   msg = processText(msg);
 
   var thePackage = {
-    timestamp : moment().format(formatString),
+    timestamp : moment().format("X"),
     name : userName,
     text : msg
   };
@@ -155,7 +157,7 @@ var packageMsg = function(input) {
 client.addEventListener("open", function(event) {
 
   // 2016-03-06 This text is displayed before the chat history. It should wait for the chat history to come from the server before displaying. Check documentation of Node.js Websockets.
-  addItem({timestamp:moment().format(formatString), userIndex:0, name:"Server", text:"You're connected."});
+  addItem({timestamp:moment().format("X"), userIndex:0, name:"Server", text:"You're connected."});
   client.addEventListener("message", function(event) {
     var hash = JSON.parse(event.data);
     addItem(hash);

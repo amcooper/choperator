@@ -61,7 +61,7 @@ server.on("connection", function(ws) {
     var index = Math.floor(Math.random() * utterance_array.length);
 
     newMessageHandler({
-      timestamp: moment().format(formatString),
+      timestamp: moment().format("X"),
       userIndex: 1,
       name: chatbot_name,
       text: utterance_array[index]
@@ -71,7 +71,7 @@ server.on("connection", function(ws) {
   clients.push(ws); // Add new client to clients array
 
   console.log("Clients connected: " + clients.length);
-  console.log(moment().format(formatString));
+  console.log(moment());
 
   // Send all current chat content to new client
   all_messages.forEach(function(message) {
@@ -79,7 +79,7 @@ server.on("connection", function(ws) {
   });
 
   newMessageHandler({
-    timestamp: moment().format(formatString),
+    timestamp: moment().format("X"),
     userIndex: 0,
     name : "Server",
     text : "Client connected."
@@ -92,7 +92,7 @@ server.on("connection", function(ws) {
     console.log("User " + usernames[allUserIndex] + " has disconnected.");
     console.log("Clients connected: " + clients.length);
     newMessageHandler({
-      timestamp: moment().format(formatString),
+      timestamp: moment().format("X"),
       userIndex: 0,
       name : "Server",
       text : "User " + usernames[allUserIndex] + " has disconnected."
@@ -121,7 +121,7 @@ server.on("connection", function(ws) {
     // Close connection of banned user.
     if (banhammerTest(processedInput)) { 
       newMessageHandler({
-        timestamp: moment().format(formatString),
+        timestamp: moment().format("X"),
         userIndex: 0,
         name: "Server", 
         text: "Dropping the hammer on " + processedInput.name + " for using a banned word." 
