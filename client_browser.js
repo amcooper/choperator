@@ -1,23 +1,5 @@
 // client_browser.js
 
-// 2016-03-06: Use data attributes and momentjs and setInterval to update relative timestamps.
-// Pseudocode below
-//
-// ***
-//
-// var relative = function(timestamp) {
-//   document.getElementByAttribute("data-timestamp").forEach(el) {
-//     var stamp;
-//     var diff = moment() - moment(el.data-timestamp);
-//     if (diff > 6 days) { stamp = moment(el.data-timestamp).format("ddd MMM DD, YYYY hh:mm:ss a") }
-//       else if (diff > 24 hours) { stamp = moment(el.data-timestamp).format("dddd hh:mm:ss a") }
-//       else { stamp = moment(el.data-timestamp).fromNow() };
-//     el.innerHTML = stamp;
-//   }
-// };
-//
-// ***
-
 // The next two lines can have their commenting status toggled to cover local and server hosting.
 var client = new WebSocket("ws://localhost:3001");
 // var client = new WebSocket("ws://theadamcooper.com:3001");
@@ -66,8 +48,9 @@ var addItem = function(inputHash) {
   // }
   // timeSpanElement.innerHTML = render;
   timeSpanElement.dataset.timestamp = inputHash.timestamp;
-  timeSpanElement.innerHTML = moment.unix( inputHash.timestamp ).fromNow() + "  ";
+  timeSpanElement.innerHTML = moment( parseInt( inputHash.timestamp, 10 )).format("hh:mm:ss a") + "  ";
   // timeSpanElement.innerHTML = inputHash.timestamp + "  "; //.toLocaleDateString('en-US', options);
+  timeSpanElement.setAttribute("title", moment( parseInt( inputHash.timestamp, 10)).format("YYYY-MM-DD ddd h:mm:ss a"));
   nameSpanElement.innerHTML = htmlSanitize(inputHash.name + ": ");
   textSpanElement.innerHTML = htmlSanitize(inputHash.text);
   newLiElement.appendChild(timeSpanElement);
@@ -141,7 +124,7 @@ var packageMsg = function(input) {
   msg = processText(msg);
 
   var thePackage = {
-    timestamp : moment().format("X"),
+    timestamp : moment().format("x"),
     name : userName,
     text : msg
   };
@@ -151,13 +134,33 @@ var packageMsg = function(input) {
   return JSON.stringify(thePackage);
 };
 
+var updateTimestamps = function() {
+  var newStamp, unixStamp, age;
+  var timestampList = document.getElementsByClassName("timestamp");
+  for ( var i=0; i<timestampList.length; i++ ) {
+    unixStamp = parseInt( timestampList.item( i ).dataset.timestamp, 10 );
+    age = moment().diff( moment( unixStamp ));
+    if ( age > 6 * 24 * 60 * 60 * 1000 ) { 
+      newStamp = moment( unixStamp ).format("ddd MMM DD hh:mm:ss a");
+    } else if ( age > 24 * 60 * 60 * 1000 ) {
+      newStamp = moment( unixStamp ).format("ddd hh:mm:ss a");
+    } else {
+      newStamp = "";
+    };
+
+    if (newStamp !== "") {
+      timestampList.item(i).innerHTML = newStamp;
+    }
+  }
+};
+
 // EVENT LISTENERS
 
 // Event listener for chat client input
 client.addEventListener("open", function(event) {
 
   // 2016-03-06 This text is displayed before the chat history. It should wait for the chat history to come from the server before displaying. Check documentation of Node.js Websockets.
-  addItem({timestamp:moment().format("X"), userIndex:0, name:"Server", text:"You're connected."});
+  addItem({timestamp:moment().format("x"), userIndex:0, name:"Server", text:"You're connected."});
   client.addEventListener("message", function(event) {
     var hash = JSON.parse(event.data);
     addItem(hash);
@@ -178,3 +181,6 @@ inputElement.addEventListener("keydown", function(event) {
     this.value = "";
   }
 });
+
+// Relativize the timestamps, checking every six hours. 
+setInterval( updateTimestamps, 1000 * 60 * 60 * 6 );
