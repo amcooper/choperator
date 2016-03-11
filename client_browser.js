@@ -140,6 +140,7 @@ var updateTimestamps = function() {
   for ( var i=0; i<timestampList.length; i++ ) {
     unixStamp = parseInt( timestampList.item( i ).dataset.timestamp, 10 );
     age = moment().diff( moment( unixStamp ));
+    console.log( moment( unixStamp ).format( "ddd MMM DD hh:mm:ss a" )); //debug
     if ( age > 6 * 24 * 60 * 60 * 1000 ) { 
       newStamp = moment( unixStamp ).format("ddd MMM DD hh:mm:ss a");
     } else if ( age > 24 * 60 * 60 * 1000 ) {
@@ -149,7 +150,7 @@ var updateTimestamps = function() {
     };
 
     if (newStamp !== "") {
-      timestampList.item(i).innerHTML = newStamp;
+      timestampList.item(i).innerHTML = newStamp + "  ";
     }
   }
 };
@@ -159,12 +160,16 @@ var updateTimestamps = function() {
 // Event listener for chat client input
 client.addEventListener("open", function(event) {
 
-  // 2016-03-06 This text is displayed before the chat history. It should wait for the chat history to come from the server before displaying. Check documentation of Node.js Websockets.
-  addItem({timestamp:moment().format("x"), userIndex:0, name:"Server", text:"You're connected."});
   client.addEventListener("message", function(event) {
     var hash = JSON.parse(event.data);
     addItem(hash);
   });
+
+  // 2016-03-06 This text is displayed before the chat history. It should wait for the chat history to come from the server before displaying. Check documentation of Node.js Websockets.
+  // Taking this out & moving it to the server as experiment.
+  // addItem({timestamp:moment().format("x"), userIndex:0, name:"Server", text:"You're connected."});
+
+  setTimeout( updateTimestamps, 2000 );
 });
 
 // event listener for username
@@ -182,5 +187,5 @@ inputElement.addEventListener("keydown", function(event) {
   }
 });
 
-// Relativize the timestamps, checking every six hours. 
-setInterval( updateTimestamps, 1000 * 60 * 60 * 6 );
+// Relativize the timestamps, checking every hour. 
+setInterval( updateTimestamps, 1000 * 60 * 30 );

@@ -78,6 +78,14 @@ server.on("connection", function(ws) {
     ws.send(JSON.stringify(message));
   });
 
+  // Send a connection message to new client
+  ws.send(JSON.stringify({
+    timestamp: moment().format("x"),
+    userIndex: 0,
+    name: "Server",
+    text: "You're connected."
+  }));
+
   newMessageHandler({
     timestamp: moment().format("x"),
     userIndex: 0,
