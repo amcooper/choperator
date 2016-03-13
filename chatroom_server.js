@@ -78,6 +78,13 @@ server.on("connection", function(ws) {
     ws.send(JSON.stringify(message));
   });
 
+  newMessageHandler({
+    timestamp: moment().format("x"),
+    userIndex: 0,
+    name : "Server",
+    text : "Client connected."
+  });
+
   // Send a connection message to new client
   ws.send(JSON.stringify({
     timestamp: moment().format("x"),
@@ -85,13 +92,6 @@ server.on("connection", function(ws) {
     name: "Server",
     text: "You're connected."
   }));
-
-  newMessageHandler({
-    timestamp: moment().format("x"),
-    userIndex: 0,
-    name : "Server",
-    text : "Client connected."
-  });
 
   ws.on("close", function() { // When the user closes the connection
     var clientIndex = clients.indexOf(ws);

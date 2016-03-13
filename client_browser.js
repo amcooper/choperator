@@ -48,10 +48,10 @@ var addItem = function(inputHash) {
   // }
   // timeSpanElement.innerHTML = render;
   timeSpanElement.dataset.timestamp = inputHash.timestamp;
-  timeSpanElement.innerHTML = moment( parseInt( inputHash.timestamp, 10 )).format("hh:mm:ss a") + "  ";
+  timeSpanElement.innerHTML = moment( parseInt( inputHash.timestamp, 10 )).format("hh:mm:ss a  ");
   // timeSpanElement.innerHTML = inputHash.timestamp + "  "; //.toLocaleDateString('en-US', options);
   timeSpanElement.setAttribute("title", moment( parseInt( inputHash.timestamp, 10)).format("YYYY-MM-DD ddd h:mm:ss a"));
-  nameSpanElement.innerHTML = htmlSanitize(inputHash.name + ": ");
+  nameSpanElement.innerHTML = userName.trim() ? htmlSanitize(inputHash.name + ": ") : htmlSanitize("Anonymous user: ");
   textSpanElement.innerHTML = htmlSanitize(inputHash.text);
   newLiElement.appendChild(timeSpanElement);
   newLiElement.appendChild(nameSpanElement);
@@ -135,26 +135,25 @@ var packageMsg = function(input) {
 };
 
 var updateTimestamps = function() {
-  var newStamp, unixStamp, age;
+  var newStamp="", unixStamp, age;
   var timestampList = document.getElementsByClassName("timestamp");
   for ( var i=0; i<timestampList.length; i++ ) {
     unixStamp = parseInt( timestampList.item( i ).dataset.timestamp, 10 );
     age = moment().diff( moment( unixStamp ));
-    console.log( moment( unixStamp ).format( "ddd MMM DD hh:mm:ss a" )); //debug
+    // console.log( moment( unixStamp ).format( "ddd MMM DD hh:mm:ss a  " )); //debug
     if ( age > 6 * 24 * 60 * 60 * 1000 ) { 
-      newStamp = moment( unixStamp ).format("ddd MMM DD hh:mm:ss a");
-    } else if ( age > 24 * 60 * 60 * 1000 ) {
-      newStamp = moment( unixStamp ).format("ddd hh:mm:ss a");
-    } else {
-      newStamp = "";
-    };
+      newStamp = moment( unixStamp ).format("ddd MMM DD hh:mm:ss a  ");
+    } else if ( moment().format( "ddd" ) !== moment( unixStamp ).format( "ddd" ) ) {
+      newStamp = moment( unixStamp ).format("ddd hh:mm:ss a  ");
+    }
 
     if (newStamp !== "") {
-      timestampList.item(i).innerHTML = newStamp + "  ";
+      timestampList.item(i).innerHTML = newStamp;
     }
   }
 };
 
+// moment().format( "ddd" ) !== moment( unixStamp ).format( "ddd" )
 // EVENT LISTENERS
 
 // Event listener for chat client input
@@ -187,5 +186,5 @@ inputElement.addEventListener("keydown", function(event) {
   }
 });
 
-// Relativize the timestamps, checking every hour. 
+// Relativize the timestamps, checking every half-hour. 
 setInterval( updateTimestamps, 1000 * 60 * 30 );
