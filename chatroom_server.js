@@ -71,7 +71,7 @@ server.on("connection", function(ws) {
   clients.push(ws); // Add new client to clients array
 
   console.log("Clients connected: " + clients.length);
-  console.log(moment());
+  console.log(moment()); //debug
 
   // Send all current chat content to new client
   all_messages.forEach(function(message) {

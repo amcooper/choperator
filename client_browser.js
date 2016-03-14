@@ -135,9 +135,10 @@ var packageMsg = function(input) {
 };
 
 var updateTimestamps = function() {
-  var newStamp="", unixStamp, age;
+  var newStamp, unixStamp, age;
   var timestampList = document.getElementsByClassName("timestamp");
   for ( var i=0; i<timestampList.length; i++ ) {
+    newStamp = "";
     unixStamp = parseInt( timestampList.item( i ).dataset.timestamp, 10 );
     age = moment().diff( moment( unixStamp ));
     // console.log( moment( unixStamp ).format( "ddd MMM DD hh:mm:ss a  " )); //debug
