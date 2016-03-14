@@ -1,3 +1,31 @@
+@font-face {
+  font-family: 'League Gothic';
+  src: url('fonts/leaguegothic-regular-webfont.eot');
+  src: url('fonts/leaguegothic-regular-webfont.eot?#iefix') format('embedded-opentype'),
+       url('fonts/leaguegothic-regular-webfont.woff') format('woff'),
+       url('fonts/leaguegothic-regular-webfont.ttf') format('truetype'),
+       url('fonts/leaguegothic-regular-webfont.svg#league_gothicregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+@font-face {
+  font-family: 'League Gothic Condensed';
+  src: url('fonts/leaguegothic-condensed-regular-webfont.eot');
+  src: url('fonts/leaguegothic-condensed-regular-webfont.eot?#iefix') format('embedded-opentype'),
+       url('fonts/leaguegothic-condensed-regular-webfont.woff') format('woff'),
+       url('fonts/leaguegothic-condensed-regular-webfont.ttf') format('truetype'),
+       url('fonts/leaguegothic-condensed-regular-webfont.svg#league_gothic_condensed-Rg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GT Walsheim Regular';
+  src: url('fonts/GT-Walsheim-Pro-Trial-Regular.otf') format('opentype');
+}
+
 * {
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
@@ -10,6 +38,7 @@ html {
 
 body {
   background-image: url("images/switchboard_bkgd.jpg");
+  background-size: 170%;
 }
 
 #container {
@@ -20,13 +49,26 @@ body {
 
 header {
   /*display: none;*/
-  font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+  font-family: 'Abril Fatface', 'Helvetica Neue', sans-serif;
   position: absolute;
   top: 0;
+  color: cornflowerblue;
+}
+
+h1 {
+  margin: 2px 0;
+  font-size: 30px;
+  font-size: 3.0rem;
+}
+
+h2 {
+  margin: 2px 0;
+  font-size: 20px;
+  font-size: 2.0rem;
 }
 
 #user_list {
-  font-family: "Bodoni 72 Oldstyle", Georgia, serif;
+  font-family: "Montserrat", Georgia, serif;
   top: 120px;
   position: absolute;
 }
@@ -73,7 +115,7 @@ header {
 
 .timestamp {
   color: #777777;
-  font-family: "Courier New", monospace, serif;
+  font-family: "Courier New", monospace;
   /* The Snook Font Size */
   font-size: 10px;
   font-size: 1.0rem;
@@ -92,10 +134,10 @@ header {
 }
 
 #chat_main {
-  font-family: "Bodoni 72 Oldstyle", Georgia, serif; 
-  top: 180px;
+  font-family: "Montserrat", "Helvetica Neue", serif; 
+  top: 80px;
   min-height: 200px;
-  max-height: 480px;
+  max-height: 492px;
   left: 0;
   width: 80%;
   position: absolute;
@@ -104,9 +146,34 @@ header {
 
 footer {
   border-top: 1px solid #000;
-  top: 660px;
+  top: 572px;
   width: 80%;
   position: absolute;
+  padding: 10px 0;
+}
+
+#name_input {
+  font-size: 40px;
+  font-size: 4.0rem;
+  width: 25%;
+  margin-right: 1.5%;
+}
+
+#input_box {
+  font-size: 40px;
+  font-size: 4.0rem;
+  width: 73%;
+}
+
+#credits {
+  font-size: 10px;
+  font-size: 1.0rem;
+  font-family: "Abril Fatface", serif;
+}
+
+#credits a {
+  color: cornflowerblue;
+  text-decoration: none;
 }
 
 ul {
