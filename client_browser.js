@@ -6,6 +6,7 @@ var client = new WebSocket("ws://localhost:3001");
 
 var formatString = "ddd MMM DD, YYYY hh:mm:ss a";
 var userName = "Anonymous user";
+var userIndex;
 var userNameElement = document.getElementById("name_input");
 var inputElement = document.getElementById("input_box");
 var chatMainElement = document.getElementById("chat_main");
@@ -51,7 +52,7 @@ var addItem = function(inputHash) {
   timeSpanElement.innerHTML = moment( parseInt( inputHash.timestamp, 10 )).format("hh:mm:ss a  ");
   // timeSpanElement.innerHTML = inputHash.timestamp + "  "; //.toLocaleDateString('en-US', options);
   timeSpanElement.setAttribute("title", moment( parseInt( inputHash.timestamp, 10)).format("YYYY-MM-DD ddd h:mm:ss a"));
-  nameSpanElement.innerHTML = userName.trim() ? htmlSanitize(inputHash.name + ": ") : htmlSanitize("Anonymous user: ");
+  nameSpanElement.innerHTML = inputHash.name.trim() ? htmlSanitize(inputHash.name + ": ") : htmlSanitize("Anonymous user: ");
   textSpanElement.innerHTML = htmlSanitize(inputHash.text);
   newLiElement.appendChild(timeSpanElement);
   newLiElement.appendChild(nameSpanElement);
