@@ -45,6 +45,7 @@ body {
   position: absolute;
   top: 0;
   width: 100%;
+  padding: 10px;
 }
 
 header {
@@ -138,7 +139,7 @@ h2 {
   top: 80px;
   min-height: 200px;
   max-height: 492px;
-  left: 0;
+  /*left: 0;*/
   width: 80%;
   position: absolute;
   overflow: auto;
