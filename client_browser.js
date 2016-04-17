@@ -4,7 +4,9 @@
 // var client = new WebSocket("ws://localhost:3001");
 var client = new WebSocket("ws://theadamcooper.com:3001");
 
+var formatString = "ddd MMM DD, YYYY hh:mm:ss a";
 var userName = "Anonymous user";
+var userIndex;
 var userNameElement = document.getElementById("name_input");
 var inputElement = document.getElementById("input_box");
 var chatMainElement = document.getElementById("chat_main");
@@ -31,7 +33,7 @@ var colorClass = function(index) { //builds a class name like "user3" or "user10
 
 var addItem = function(inputHash) {
   console.log(inputHash);
-  var options = { weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'numeric' };
+  // var options = { weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'numeric' };
   var newLiElement = document.createElement("li");
   var timeSpanElement = document.createElement("span");
   var nameSpanElement = document.createElement("span");
@@ -46,8 +48,11 @@ var addItem = function(inputHash) {
   //      render mmm dd hh:mm
   // }
   // timeSpanElement.innerHTML = render;
-  timeSpanElement.innerHTML = inputHash.timestamp + "  "; //.toLocaleDateString('en-US', options);
-  nameSpanElement.innerHTML = htmlSanitize(inputHash.name + ": ");
+  timeSpanElement.dataset.timestamp = inputHash.timestamp;
+  timeSpanElement.innerHTML = moment( parseInt( inputHash.timestamp, 10 )).format("hh:mm:ss a  ");
+  // timeSpanElement.innerHTML = inputHash.timestamp + "  "; //.toLocaleDateString('en-US', options);
+  timeSpanElement.setAttribute("title", moment( parseInt( inputHash.timestamp, 10)).format("YYYY-MM-DD ddd h:mm:ss a"));
+  nameSpanElement.innerHTML = inputHash.name.trim() ? htmlSanitize(inputHash.name + ": ") : htmlSanitize("Anonymous user: ");
   textSpanElement.innerHTML = htmlSanitize(inputHash.text);
   newLiElement.appendChild(timeSpanElement);
   newLiElement.appendChild(nameSpanElement);
@@ -120,7 +125,7 @@ var packageMsg = function(input) {
   msg = processText(msg);
 
   var thePackage = {
-    timestamp : new Date(),
+    timestamp : moment().format("x"),
     name : userName,
     text : msg
   };
@@ -130,15 +135,42 @@ var packageMsg = function(input) {
   return JSON.stringify(thePackage);
 };
 
+var updateTimestamps = function() {
+  var newStamp, unixStamp, age;
+  var timestampList = document.getElementsByClassName("timestamp");
+  for ( var i=0; i<timestampList.length; i++ ) {
+    newStamp = "";
+    unixStamp = parseInt( timestampList.item( i ).dataset.timestamp, 10 );
+    age = moment().diff( moment( unixStamp ));
+    // console.log( moment( unixStamp ).format( "ddd MMM DD hh:mm:ss a  " )); //debug
+    if ( age > 6 * 24 * 60 * 60 * 1000 ) { 
+      newStamp = moment( unixStamp ).format("ddd MMM DD hh:mm:ss a  ");
+    } else if ( moment().format( "ddd" ) !== moment( unixStamp ).format( "ddd" ) ) {
+      newStamp = moment( unixStamp ).format("ddd hh:mm:ss a  ");
+    }
+
+    if (newStamp !== "") {
+      timestampList.item(i).innerHTML = newStamp;
+    }
+  }
+};
+
+// moment().format( "ddd" ) !== moment( unixStamp ).format( "ddd" )
 // EVENT LISTENERS
 
 // Event listener for chat client input
 client.addEventListener("open", function(event) {
-  addItem({timestamp:new Date(), userIndex:0, name:"Server", text:"You're connected."});
+
   client.addEventListener("message", function(event) {
     var hash = JSON.parse(event.data);
     addItem(hash);
   });
+
+  // 2016-03-06 This text is displayed before the chat history. It should wait for the chat history to come from the server before displaying. Check documentation of Node.js Websockets.
+  // Taking this out & moving it to the server as experiment.
+  // addItem({timestamp:moment().format("x"), userIndex:0, name:"Server", text:"You're connected."});
+
+  setTimeout( updateTimestamps, 2000 );
 });
 
 // event listener for username
@@ -155,3 +187,6 @@ inputElement.addEventListener("keydown", function(event) {
     this.value = "";
   }
 });
+
+// Relativize the timestamps, checking every half-hour. 
+setInterval( updateTimestamps, 1000 * 60 * 30 );
