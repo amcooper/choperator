@@ -1,8 +1,8 @@
 // client_browser.js
 
 // The next two lines can have their commenting status toggled to cover local and server hosting.
-var client = new WebSocket("ws://localhost:3001");
-// var client = new WebSocket("ws://theadamcooper.com:3001");
+// var client = new WebSocket("ws://localhost:3001");
+var client = new WebSocket("ws://theadamcooper.com:3001");
 
 var formatString = "ddd MMM DD, YYYY hh:mm:ss a";
 var userName = "Anonymous user";
