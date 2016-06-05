@@ -53,7 +53,7 @@ var addItem = function(inputHash) {
   // timeSpanElement.innerHTML = inputHash.timestamp + "  "; //.toLocaleDateString('en-US', options);
   timeSpanElement.setAttribute("title", moment( parseInt( inputHash.timestamp, 10)).format("YYYY-MM-DD ddd h:mm:ss a"));
   nameSpanElement.innerHTML = inputHash.name.trim() ? htmlSanitize(inputHash.name + ": ") : htmlSanitize("Anonymous user: ");
-  textSpanElement.innerHTML = htmlSanitize(inputHash.text);
+  textSpanElement.innerHTML = inputHash.text;
   newLiElement.appendChild(timeSpanElement);
   newLiElement.appendChild(nameSpanElement);
   newLiElement.appendChild(textSpanElement);
@@ -63,12 +63,12 @@ var addItem = function(inputHash) {
 };
 
 var tableFlip = function(matchData) {
-  console.log("function tableFlip : start"); //debug
+  // console.log("function tableFlip : start"); //debug
   return "(╯°□°）╯︵ ┻━┻";
 };
 
 var yell = function(matchData) {
-  console.log("function yell : start"); //debug
+  // console.log("function yell : start"); //debug
   var yellText = matchData[1] ? matchData[1].toUpperCase() : "ARGGHHH!";
   return yellText;
 };
@@ -82,12 +82,12 @@ var substituteText = function(txt) {
   // A version of the for loop with forEach; couldn't get this working earlier.
   matchers.forEach(function(matcher) {
     matchData = txt.match(matcher.regex);
-    console.log("regex : " + matcher.regex.toString() + "; match data : " + matchData); //debug
+    // console.log("regex : " + matcher.regex.toString() + "; match data : " + matchData); //debug
     if (matchData) {
       subbedText = matcher.processor(matchData);
     }
   });
-  console.log("subbedText : " + subbedText); //debug
+  // console.log("subbedText : " + subbedText); //debug
   return subbedText || txt;
 };
 
@@ -113,9 +113,11 @@ var linkHandler = function(txt) {
 
 var processText = function(txt) {
   var subTxt = substituteText(txt);
-  console.log("substitute : " + subTxt); //debug
-  var processedText = linkHandler(subTxt); 
-  console.log("link handler : " + processedText); //debug
+  // console.log("substitute : " + subTxt); //debug
+  var sanitizedText = htmlSanitize(subTxt);
+  // console.log("sanitize : " + sanitizedText); //debug
+  var processedText = linkHandler(sanitizedText); 
+  // console.log("link handler : " + processedText); //debug
   return processedText;
 };
 
@@ -130,7 +132,7 @@ var packageMsg = function(input) {
     text : msg
   };
 
-  console.log(thePackage); //debug
+  // console.log(thePackage); //debug
 
   return JSON.stringify(thePackage);
 };
@@ -181,7 +183,7 @@ userNameElement.addEventListener('blur', function() {
 // On Enter/Return keypress, send contents of input box to chat server
 inputElement.addEventListener("keydown", function(event) {
   if (event.keyCode === 13) { 
-    console.log("input box : " + this.value); //debug
+    // console.log("input box : " + this.value); //debug
     var packaged = packageMsg(this.value);
     client.send(packaged);
     this.value = "";
