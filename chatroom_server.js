@@ -18,16 +18,6 @@ console.log("Listening on port 3001.");
 
 server.on("connection", function(ws) {
 
-  // HTML sanitization
-  var htmlSanitize = function(unsafe) {
-    return unsafe
-     .replace(/&/g, "&amp;")
-     .replace(/</g, "&lt;")
-     .replace(/>/g, "&gt;")
-     .replace(/"/g, "&quot;")
-     .replace(/'/g, "&#039;");
-  };
-
   // Broadcast message to all clients
   var broadcast = function(hash) {
     clients.forEach(function(client) {
